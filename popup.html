@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 280px;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow-x: hidden;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .header {
+      padding: 15px;
+      text-align: center;
+      color: white;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .header p {
+      margin: 5px 0 0 0;
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    .ghost-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .menu {
+      background: white;
+      padding: 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 10px;
+      margin: 4px 0;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+      border: 2px solid #f0f0f0;
+    }
+
+    .menu-item:hover {
+      border-color: #667eea;
+      box-shadow: 0 2px 6px rgba(102, 126, 234, 0.2);
+    }
+
+    .menu-item-icon {
+      font-size: 20px;
+      margin-right: 10px;
+      width: 24px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .menu-item-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .menu-item-title {
+      font-weight: 600;
+      font-size: 13px;
+      color: #333;
+      margin-bottom: 2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .menu-item-desc {
+      font-size: 10px;
+      color: #666;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .footer {
+      padding: 12px;
+      text-align: center;
+      color: white;
+      font-size: 10px;
+      opacity: 0.8;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 8px;
+      width: 260px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      padding: 12px 15px;
+      border-bottom: 1px solid #e0e0e0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px 8px 0 0;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .modal-body {
+      padding: 15px;
+    }
+
+    .modal-body label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .modal-body input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 2px solid #e0e0e0;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .modal-body input:focus {
+      border-color: #667eea;
+    }
+
+    .modal-body input::placeholder {
+      color: #999;
+      font-size: 11px;
+    }
+
+    .modal-footer {
+      padding: 12px 15px;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .modal-footer button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-cancel {
+      background: #e0e0e0;
+      color: #666;
+    }
+
+    .btn-cancel:hover {
+      background: #d0d0d0;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+    }
+
+    .btn-primary:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="ghost-icon">👻</div>
+    <h1>Ghost Writer</h1>
+    <p>Your AI Writing Assistant</p>
+  </div>
+
+  <div class="menu">
+    <div class="menu-item" id="analyzeLanding">
+      <div class="menu-item-icon">✨</div>
+      <div class="menu-item-content">
+        <div class="menu-item-title">Analyze Landing Page</div>
+        <div class="menu-item-desc">Improve copywriting & conversions</div>
+      </div>
+    </div>
+
+    <div class="menu-item" id="checkGrammar">
+      <div class="menu-item-icon">✓</div>
+      <div class="menu-item-content">
+        <div class="menu-item-title">Check Grammar on Page</div>
+        <div class="menu-item-desc">Find and fix grammar errors</div>
+      </div>
+    </div>
+
+    <div class="menu-item" id="generateBlog">
+      <div class="menu-item-icon">📝</div>
+      <div class="menu-item-content">
+        <div class="menu-item-title">Generate Blog Article</div>
+        <div class="menu-item-desc">Create article from title</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Right-click on text for more options
+  </div>
+
+  <div id="blogTitleModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Generate Blog Article</h3>
+      </div>
+      <div class="modal-body">
+        <label for="blogTitleInput">Enter blog article title:</label>
+        <input type="text" id="blogTitleInput" placeholder="e.g., How to Build a Chrome Extension" />
+      </div>
+      <div class="modal-footer">
+        <button id="cancelBlog" class="btn-cancel">Cancel</button>
+        <button id="generateBlogBtn" class="btn-primary">Generate</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
