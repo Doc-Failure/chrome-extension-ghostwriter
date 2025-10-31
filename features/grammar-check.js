@@ -1,11 +1,3 @@
-// ============================================================================
-// GRAMMAR CHECK FUNCTIONALITY
-// ============================================================================
-
-// ============================================================================
-// GRAMMAR CHECK HANDLER (for selected text)
-// ============================================================================
-
 async function handleGrammarCheck(info, tab) {
   try {
     const proofreader = await Proofreader.create({
@@ -15,7 +7,6 @@ async function handleGrammarCheck(info, tab) {
 
     const corrections = await proofreader.proofread(info.selectionText);
 
-    // First, inject the constants and UI helpers
     await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       files: ['utils/constants.js', 'utils/ui-helpers.js']
@@ -24,7 +15,6 @@ async function handleGrammarCheck(info, tab) {
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: (corrections) => {
-        // Add CSS animations if not already present
         if (!document.getElementById('ghostwriter-animations')) {
           const style = document.createElement('style');
           style.id = 'ghostwriter-animations';

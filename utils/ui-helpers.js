@@ -1,12 +1,3 @@
-// ============================================================================
-// HELPER FUNCTIONS - UI CREATION AND TEXT PROCESSING
-// ============================================================================
-
-// ============================================================================
-// UI CREATION FUNCTIONS
-// ============================================================================
-
-// Creates a styled pointer (triangle) for bubbles
 function createPointer(color, position = '50%') {
   const outer = document.createElement('div');
   Object.assign(outer.style, {
@@ -37,7 +28,6 @@ function createPointer(color, position = '50%') {
   return { outer, inner };
 }
 
-// Creates a styled button
 function createButton(text, type = 'primary', onClick) {
   const button = document.createElement('button');
   button.textContent = text;
@@ -65,7 +55,6 @@ function createButton(text, type = 'primary', onClick) {
   return button;
 }
 
-// Creates a notification div (loading, error, success)
 function createNotification(message, type = 'info') {
   const colorMap = {
     info: STYLES.colors.primary,
@@ -86,7 +75,6 @@ function createNotification(message, type = 'info') {
   return div;
 }
 
-// Shows a temporary notification with auto-dismiss
 function showNotification(message, type = 'info', duration = 3000) {
   const notification = createNotification(message, type);
   document.body.appendChild(notification);
@@ -100,7 +88,6 @@ function showNotification(message, type = 'info', duration = 3000) {
   return notification;
 }
 
-// Shows an error message with context-aware text
 function showError(errorMessage, context = 'Operation failed') {
   let message = `${context}. `;
 
@@ -125,7 +112,6 @@ function showError(errorMessage, context = 'Operation failed') {
   }, 5000);
 }
 
-// Position bubble relative to element with viewport constraint handling
 function positionBubble(bubble, element) {
   const rect = element.getBoundingClientRect();
   const bubbleWidth = parseInt(STYLES.bubble.maxWidth) || 400;
@@ -134,12 +120,10 @@ function positionBubble(bubble, element) {
   let top = window.scrollY + rect.bottom + 10;
   let left = window.scrollX + rect.left;
 
-  // Adjust if bubble goes off right edge
   if (left + bubbleWidth > viewportWidth) {
     left = Math.max(10, viewportWidth - bubbleWidth - 10);
   }
 
-  // Adjust if bubble goes off left edge
   if (left < 10) {
     left = 10;
   }
@@ -148,7 +132,6 @@ function positionBubble(bubble, element) {
   bubble.style.left = `${left}px`;
 }
 
-// Creates a complete bubble with configurable options
 function createBubble(options = {}) {
   const {
     id,
@@ -161,21 +144,17 @@ function createBubble(options = {}) {
     showPointer = true,
   } = options;
 
-  // Remove existing bubble with same ID
   if (id) {
     const existing = document.getElementById(id);
     if (existing) existing.remove();
   }
 
-  // Highlight the target element to make it clear what the bubble refers to
   if (element) {
-    // Store original styles to restore later
     const originalOutline = element.style.outline;
     const originalBackground = element.style.backgroundColor;
     const originalPosition = element.style.position;
     const originalZIndex = element.style.zIndex;
 
-    // Add highlighting
     element.style.outline = `3px solid ${borderColor}`;
     element.style.outlineOffset = '2px';
     element.style.backgroundColor = borderColor === STYLES.colors.error
@@ -185,18 +164,14 @@ function createBubble(options = {}) {
       : 'rgba(102, 126, 234, 0.1)';
     element.style.position = 'relative';
     element.style.zIndex = '9998';
-
-    // Add pulsing animation
     element.style.animation = 'ghostwriter-pulse 2s ease-in-out infinite';
 
-    // Store cleanup function
     element.setAttribute('data-ghostwriter-highlighted', 'true');
     element.setAttribute('data-ghostwriter-original-outline', originalOutline);
     element.setAttribute('data-ghostwriter-original-bg', originalBackground);
     element.setAttribute('data-ghostwriter-original-position', originalPosition);
     element.setAttribute('data-ghostwriter-original-zindex', originalZIndex);
 
-    // Scroll element into view if not visible
     const rect = element.getBoundingClientRect();
     const isVisible = (
       rect.top >= 0 &&
@@ -215,7 +190,6 @@ function createBubble(options = {}) {
   bubble.setAttribute('data-ghostwriter-bubble', 'true');
   bubble.className = 'ghostwriter-bubble';
 
-  // Store reference to the target element
   if (element) {
     bubble.setAttribute('data-ghostwriter-target-element', 'stored');
     bubble._targetElement = element;
@@ -241,7 +215,6 @@ function createBubble(options = {}) {
     animation: 'ghostwriter-fadein 0.3s',
   });
 
-  // Position bubble
   if (element) {
     positionBubble(bubble, element);
   } else {
@@ -249,14 +222,12 @@ function createBubble(options = {}) {
     bubble.style.left = '100px';
   }
 
-  // Add pointer
   if (showPointer) {
     const pointers = createPointer(borderColor);
     bubble.appendChild(pointers.outer);
     bubble.appendChild(pointers.inner);
   }
 
-  // Add title
   if (title) {
     const titleDiv = document.createElement('div');
     titleDiv.textContent = title;
@@ -270,7 +241,6 @@ function createBubble(options = {}) {
     bubble.appendChild(titleDiv);
   }
 
-  // Add content
   if (content) {
     const contentDiv = document.createElement('div');
     if (typeof content === 'string') {
@@ -286,7 +256,6 @@ function createBubble(options = {}) {
     bubble.appendChild(contentDiv);
   }
 
-  // Add buttons
   if (buttons.length > 0) {
     const buttonContainer = document.createElement('div');
     Object.assign(buttonContainer.style, {
@@ -303,7 +272,6 @@ function createBubble(options = {}) {
     bubble.appendChild(buttonContainer);
   }
 
-  // Add a cleanup function to restore element highlighting when bubble is removed
   const originalRemove = bubble.remove.bind(bubble);
   bubble.remove = function() {
     removeElementHighlight(this._targetElement);
@@ -314,13 +282,11 @@ function createBubble(options = {}) {
   return bubble;
 }
 
-// Removes highlighting from an element
 function removeElementHighlight(element) {
   if (!element || !element.getAttribute('data-ghostwriter-highlighted')) {
     return;
   }
 
-  // Restore original styles
   const originalOutline = element.getAttribute('data-ghostwriter-original-outline');
   const originalBg = element.getAttribute('data-ghostwriter-original-bg');
   const originalPosition = element.getAttribute('data-ghostwriter-original-position');
@@ -333,17 +299,12 @@ function removeElementHighlight(element) {
   element.style.animation = '';
   element.style.outlineOffset = '';
 
-  // Remove data attributes
   element.removeAttribute('data-ghostwriter-highlighted');
   element.removeAttribute('data-ghostwriter-original-outline');
   element.removeAttribute('data-ghostwriter-original-bg');
   element.removeAttribute('data-ghostwriter-original-position');
   element.removeAttribute('data-ghostwriter-original-zindex');
 }
-
-// ============================================================================
-// TEXT PROCESSING FUNCTIONS
-// ============================================================================
 
 function cleanText(text) {
   if (!text) return text;
@@ -354,10 +315,6 @@ function normalizeText(text) {
   return text.trim().replace(/\.+$/, '');
 }
 
-// ============================================================================
-// ELEMENT SELECTION FUNCTIONS
-// ============================================================================
-
 function getTextElements(minLength = 5) {
   const elements = [];
   const textTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P', 'SPAN', 'A', 'LI', 'BUTTON', 'DIV'];
@@ -365,7 +322,6 @@ function getTextElements(minLength = 5) {
   textTags.forEach(tag => {
     const tagElements = document.querySelectorAll(tag);
     tagElements.forEach(el => {
-      // Skip if has text children
       const hasTextChildren = Array.from(el.children).some(child => {
         const childText = child.textContent.trim();
         return childText.length > 0 && textTags.includes(child.tagName);
